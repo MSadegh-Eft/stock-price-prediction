@@ -58,3 +58,23 @@ with st.sidebar:
 
 if user_start_date>user_end_date:
     # st.sidebar.write(":red[Error: the start date can't be after the end date !!!]")
+    st.sidebar.markdown(f'<h1 style="background-color:#FFFFFF;text-align: center;color:#C34104;font-size:24px;">Error: the start date cant be after the end date !!!</h1>', unsafe_allow_html=True)
+
+else:
+    df = yf.download(user_input, user_start_date, user_end_date)
+
+# describing data
+subheader_output = 'Raw Dataframe from ' + str(user_start_date.year) + '-' + str(user_end_date.year) +' ('+ str(df.shape[0]) + ' Days)'
+st.subheader(subheader_output) # used a variable because it cant handle more than 3 inputs
+st.write(df)
+#st.table(df)
+#print(df.shape)
+
+#visualizations
+st.subheader('Closing price')
+plt.title(user_input) #***************
+plt.xlabel('Days')
+plt.ylabel('Close Price')
+plt.plot(df['Adj Close'], 'b')
+#plt.show()
+st.pyplot()

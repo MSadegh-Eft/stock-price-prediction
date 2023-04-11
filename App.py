@@ -78,3 +78,23 @@ plt.ylabel('Close Price')
 plt.plot(df['Adj Close'], 'b')
 #plt.show()
 st.pyplot()
+
+##############################################################
+
+df = df.drop(['Close'], axis=1)
+
+df['HL_PCT'] = (df['High'] - df['Low']) / df['Adj Close'] * 100.0 #PCT means percent 
+# the "HL_PCT" is supposted to be "high - low"
+
+df['PCT_CHANGE'] = (df['Adj Close'] - df['Open']) / df['Open'] * 100.0 # we multipliy it just to make it smaller
+df = df[['Adj Close', 'HL_PCT', 'PCT_CHANGE', 'Volume']]
+
+# describing data
+subheader_output = 'New Dataframe from ' + str(user_start_date.year) + '-' + str(user_end_date.year)
+st.subheader(subheader_output) # used a variable because it cant handle more than 3 inputs
+st.write(df)
+
+#visualizations
+st.subheader('PCT_CHANGE & HL_PCT')
+title = user_input + '(PCT_CHANGE & HL_PCT)'
+plt.title(title) #***************

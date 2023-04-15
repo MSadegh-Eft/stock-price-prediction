@@ -98,3 +98,15 @@ st.write(df)
 st.subheader('PCT_CHANGE & HL_PCT')
 title = user_input + '(PCT_CHANGE & HL_PCT)'
 plt.title(title) #***************
+plt.xlabel('Days')
+plt.ylabel('Close Price')
+plt.plot(df['PCT_CHANGE'])
+plt.plot(df['HL_PCT'], 'r')
+plt.legend(["PCT_CHANGE", "HL_PCT"], loc ="lower right") # show the guide on the corner
+#plt.show()
+st.pyplot()
+
+###################################
+
+st.subheader('Closing Price vs Time chart with 100MA & 200MA') # 'MA' : mean average
+ma100 = df['Adj Close'].rolling(100).mean()

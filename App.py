@@ -110,3 +110,31 @@ st.pyplot()
 
 st.subheader('Closing Price vs Time chart with 100MA & 200MA') # 'MA' : mean average
 ma100 = df['Adj Close'].rolling(100).mean()
+ma200 = df['Adj Close'].rolling(200).mean()
+fig = plt.figure(figsize=(12, 6))
+plt.plot(df['Adj Close'], 'b')
+plt.plot(ma100, 'r')
+plt.plot(ma200, 'g')
+plt.legend(['Closing price', 'ma100', 'ma200'], loc ="lower right")
+st.pyplot()
+#st.pyplot(fig)
+
+###################################
+
+df.fillna(-99999, inplace = True) # fill means fill and na means NULL, so this line fills the empty places with the number -99999 becaues it does not have an effec on the output
+#forecast_out = int(math.ceil(0.005*len(df))) # math.ceil rounds the numder to the nearest whole number. also "forcast_out" shows the days of guessing in advance, for example  if it says 30, it means its guessing 30 days in advance
+# "0.1" is used to predect 10 percent of the data
+forecast_col = 'Adj Close'
+forecast_out = prediction_days
+#print(forecast_out, "days")
+
+df['lable'] = df[forecast_col].shift(-forecast_out)
+
+X = np.array(df.drop(['lable'], axis = 1)) # we use the drop to say anything except lable
+
+X = preprocessing.scale(X) # Center to the mean (normalizing), takes a bit more time
+X_future = X[-forecast_out:] # the missing data (future)
+X = X[:-forecast_out] # the data we have
+
+df.dropna(inplace = True)
+

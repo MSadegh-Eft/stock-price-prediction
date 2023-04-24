@@ -138,3 +138,103 @@ X = X[:-forecast_out] # the data we have
 
 df.dropna(inplace = True)
 
+Y = np.array(df['lable']) # so the "X" is out futures and the "Y" is out lable (what we guess)
+
+#X = preprocessing.scale(X) # Center to the mean (normalizing), takes a bit more time
+
+x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size = 0.2) # shuffeling the data and splitting it to training and testing data
+
+clf = LinearRegression() # the process of classification. we can switch this functiong with other Regression functions like "svm.SVR()"
+clf.fit(x_train, y_train) # training (or fitting) based on the trainig data
+Svm = svm.SVR()
+Svm.fit(x_train, y_train)
+
+clf_test_predict = clf.predict(x_test)
+st.subheader('Testing Data vs the "linear Regression" prediction') # 'MA' : mean average
+plt.plot(y_test, 'b')
+plt.plot(clf_test_predict, 'r')
+plt.legend(['Testing Data', 'Prediction'], loc ="lower right")
+st.pyplot()
+
+########## pickle #############
+
+# with open('linearregression.pickle', 'wb') as f: # saving the classified (trained) data so we dont need to train it every time
+#     pickle.dump(clf, f)
+
+# pickle_in = open('linearregression.pickle', 'rb') # reading and loading the trained data into the clf again
+# clf = pickle.load(pickle_in)
+
+#######################
+
+accuracy = clf.score(x_test, y_test) # testing the classification using the testing data. "score" returns a score indicating the accuracy (squerd error)
+accuracy_svm = Svm.score(x_test, y_test)
+
+# print('accuracy: ', accuracy)
+
+# describing data 
+st.subheader('The Accuracy Of The "linear regression" Model ') # used a variable because it cant handle more than 3 inputs
+st.markdown(f'<h1 style="background-color:#FFFFFF;text-align: center;color:#FF0000;font-size:24px;">{accuracy}</h1>', unsafe_allow_html=True)
+#st.write(accuracy)
+#print(len(X), len(Y))
+
+############################
+
+forecast_set = clf.predict(X_future)
+Title_forcast_set = '"linear regression" Prediction Of The Next ' + str(forecast_out) + ' Days'
+st.subheader(Title_forcast_set) # used a variable because it cant handle more than 3 inputs
+
+col1, col2, col3 = st.columns(3)
+with col2:
+    st.write(forecast_set)
+    
+#print(forecast_set) #************************$$$$$$$$$$$$$$$$$
+df['Forecast'] = np.nan
+#print(df['Forecast']) just NaN
+
+############################
+
+last_date = df.iloc[-1].name # finding the last date./ iloc is Purely integer-location based indexing for selection by position./ last position/ name is the data that is on the left of the dataframe
+last_unix = last_date.timestamp()
+one_day = 86400
+next_unix = last_unix + one_day
+#print(df['Forecast']) just NaN
+
+#####################
+
+for i in forecast_set: # to show the dates on the graph.
+    next_date = datetime.datetime.fromtimestamp(next_unix) # The fromtimestamp() function is used to return the date corresponding to a specified timestamp
+    next_unix += one_day
+    df.loc[next_date] = [np.nan for _ in range(len(df.columns) -1)] + [i] # "[i]" is the forecast_set value loc = Access a group of rows and columns by label(s) or a boolean array.
+    #print(next_date)
+#print(df['Forecast']) the last 16 indexes have values
+#print(df.head())
+
+#cach_for_end = df['Forecast']
+
+### using side by side columns
+col1, col2,  = st.columns(2)
+
+with col1:
+    st.subheader('Closing Price & Prediction')
+    # df['Adj Close'].plot()
+    # df['Forecast'].plot()
+    plt.plot(df['Adj Close'], 'b')
+    plt.plot(df['Forecast'], 'r')
+    #plt.plot(forecast_set, 'g')
+    plt.legend(['Closing price', 'Prediction'], loc ="lower right") # show the guide on the corner
+    plt.xlabel('Date')
+    plt.ylabel('Price')
+    #plt.show()
+    st.pyplot()
+
+with col2:  
+    st.subheader('Prediction')
+    plt.plot(df['Forecast'], 'r')
+    plt.xlabel('Date')
+    plt.ylabel('Price')
+    #plt.show()
+    st.pyplot()
+    
+    ######################################### THIS IS THE SAME THING FOR SUPPORT VECTORE REGRESSION ###################################
+
+Svm_test_predict = Svm.predict(x_test)

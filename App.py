@@ -238,3 +238,61 @@ with col2:
     ######################################### THIS IS THE SAME THING FOR SUPPORT VECTORE REGRESSION ###################################
 
 Svm_test_predict = Svm.predict(x_test)
+st.subheader('Testing Data vs the "Suppor Vector Regression" prediction') # 'MA' : mean average
+plt.plot(y_test, 'b')
+plt.plot(Svm_test_predict, 'g')
+plt.legend(['Testing Data', 'Prediction'], loc ="lower right")
+st.pyplot()
+
+st.subheader('The Accuracy Of The"Support Vector Regression" Model') # used a variable because it cant handle more than 3 inputs
+st.markdown(f'<h1 style="background-color:#FFFFFF;text-align: center;color:#008000;font-size:24px;">{accuracy_svm}</h1>', unsafe_allow_html=True)
+#st.write(accuracy_svm)
+
+forecast_set_svm = Svm.predict(X_future)
+Title_forcast_set_svm = '"Support vector regression" Prediction Of The Next ' + str(forecast_out) + ' Days'
+st.subheader(Title_forcast_set) # used a variable because it cant handle more than 3 inputs
+
+col1, col2, col3 = st.columns(3)
+with col2:
+    st.write(forecast_set_svm)
+    
+#print(forecast_set_svm) #************************$$$$$$$$$$$$$$$$$
+df['Forecast_svm'] = np.nan
+#print(df['Forecast_svm']) just NaN
+
+df['Forecast_svm'][-len(forecast_set_svm):] = forecast_set_svm
+
+### using side by side columns
+col1, col2 = st.columns(2)
+
+with col1:
+    st.subheader('Closing Price & Prediction')
+    # df['Adj Close'].plot()
+    # df['Forecast_svm'].plot()
+    plt.plot(df['Adj Close'], 'b')
+    plt.plot(df['Forecast_svm'], 'g')
+    #plt.plot(forecast_set_svm, 'g')
+    plt.legend(['Closing price', 'Prediction'], loc ="lower right") # show the guide on the corner
+    plt.xlabel('Date')
+    plt.ylabel('Price')
+    #plt.show()
+    st.pyplot()
+    
+with col2:
+    st.subheader('Prediction')
+    plt.plot(df['Forecast_svm'], 'g')
+    plt.xlabel('Date')
+    plt.ylabel('Price')
+    #plt.show()
+    st.pyplot()
+    
+#########################################
+    
+st.subheader('Support Vector Regression VS linear regression')
+fig = plt.figure(figsize=(12, 6))
+#plt.plot(cach_for_end, 'r')
+plt.plot(df['Forecast'], 'r')
+plt.plot(df['Forecast_svm'], 'g')
+plt.legend(['linear regression', 'Support Vector Regression'], loc ="lower right")
+st.pyplot()
+#st.pyplot(fig)

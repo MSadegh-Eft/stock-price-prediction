@@ -35,7 +35,7 @@ text-align: center;
 }
 </style>
 <div class="footer">
-<p>Developed by <a style='display: block; text-align: center;' href="https://github.com/nosadeghob" target="_blank">Mohammad sadegh Eftekhar</a></p>
+<p>Developed by <a style='display: block; text-align: center;' href="https://github.com/MSadegh-Eft" target="_blank">Mohammad sadegh Eftekhar</a></p>
 </div>
 """
 st.markdown(footer,unsafe_allow_html=True)
